@@ -90,4 +90,5 @@ print(grid.shape)
 transpose = np.transpose(grid,(1,2,0))
 
 print(transpose.shape)
-plt.imsave("originals.png",transpose)
+plt.imshow(transpose)
+plt.savefig("Original_images.png")
