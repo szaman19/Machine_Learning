@@ -83,7 +83,7 @@ plt.figure(figsize=(4,4))
 plt.axis("off")
 plt.title("Training Images")
 
-grid = vutils.make_grid(real_batch[0].to(device)[:16], padding=2, normalize=True).cpu()
+grid = vutils.make_grid(real_batch[0].to(device)[:32], padding=2, normalize=True).cpu()
 
 print(grid.shape)
 
