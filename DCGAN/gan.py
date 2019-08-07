@@ -110,11 +110,11 @@ class Generator(nn.Module):
         self.ngpu = ngpu
         self.main = nn.Sequential(
             # input is Z, going into a convolution
-            nn.ConvTranspose2d( nz, ngf * 32, 4, 1, 0, bias=False),
+            nn.ConvTranspose2d( nz, ngf * 32, 8, 1, 0, bias=False),
             nn.BatchNorm2d(ngf * 32),
             nn.ReLU(True),
-            # state size. (ngf*32) x 4 x 4
-            nn.ConvTranspose2d(ngf * 32, ngf * 16, 4, 2, 1, bias=False),
+            # state size. (ngf*32) x 8 x 8
+            nn.ConvTranspose2d(ngf * 32, ngf * 16, 4, 2, 5, bias=False),
             nn.BatchNorm2d(ngf * 16),
             nn.ReLU(True),
             # state size. (ngf*16) x 8 x 8
