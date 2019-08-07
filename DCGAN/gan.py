@@ -31,7 +31,7 @@ dataroot = "data/Romeria"
 workers = 10
 
 # Batch size during training
-batch_size = 32
+batch_size = 128
 
 # Spatial size of training images. All images will be resized to this
 #   size using a transformer.
@@ -41,19 +41,19 @@ image_size = 256
 nc = 3
 
 # Size of z latent vector (i.e. size of generator input)
-nz = 100
+nz = 1024
 
 # Size of feature maps in generator
-ngf = 16
+ngf = 128
 
 # Size of feature maps in discriminator
-ndf = 16
+ndf = 64
 
 # Number of training epochs
 num_epochs = 125
 
 # Learning rate for optimizers
-lr = 0.0002
+lr = 1e-5
 
 # Beta1 hyperparam for Adam optimizers
 beta1 = 0.9
@@ -185,7 +185,7 @@ class Discriminator(nn.Module):
         else:
             output = self.main(input)
 
-        return output
+        return output.view(-1, 1).squeeze(1)
 # Create the generator
 netG = Generator(ngpu).to(device)
 
@@ -280,8 +280,7 @@ for epoch in range(num_epochs):
         errD = errD_real + errD_fake
         # Update D
 
-        if(errD > 0.1):
-        	optimizerD.step()
+        optimizerD.step()
 
         ############################
         # (2) Update G network: maximize log(D(G(z)))
