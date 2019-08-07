@@ -28,7 +28,7 @@ torch.manual_seed(manualSeed)
 dataroot = "data/Romeria"
 
 # Number of workers for dataloader
-workers = 2
+workers = 10
 
 # Batch size during training
 batch_size = 32
@@ -50,7 +50,7 @@ ngf = 64
 ndf = 64
 
 # Number of training epochs
-num_epochs = 5
+num_epochs = 50
 
 # Learning rate for optimizers
 lr = 0.0002
@@ -235,17 +235,13 @@ for epoch in range(num_epochs):
         netD.zero_grad()
         # Format batch
         real_cpu = data[0].to(device)
-        print(real_cpu.shape)
+
         b_size = real_cpu.size(0)
 
-        print(b_size)
         label = torch.full((b_size,), real_label, device=device)
         # Forward pass real batch through D
         output = netD(real_cpu)
         # Calculate loss on all-real batch
-
-        print(output.shape)
-        print(label.shape)
         errD_real = criterion(output, label)
         # Calculate gradients for D in backward pass
         errD_real.backward()
@@ -305,14 +301,14 @@ for epoch in range(num_epochs):
 real_batch = next(iter(dataloader))
 
 # Plot the real images
-plt.figure(figsize=(15,15))
-plt.subplot(1,2,1)
-plt.axis("off")
-plt.title("Real Images")
-plt.imshow(np.transpose(vutils.make_grid(real_batch[0].to(device)[:64], padding=5, normalize=True).cpu(),(1,2,0)))
+plt.figure(figsize=(4,4))
+# plt.subplot(1,2,1)
+# plt.axis("off")
+# plt.title("Real Images")
+# plt.imshow(np.transpose(vutils.make_grid(real_batch[0].to(device)[:64], padding=5, normalize=True).cpu(),(1,2,0)))
 
 # Plot the fake images from the last epoch
-plt.subplot(1,2,2)
+# plt.subplot(1,2,2)
 plt.axis("off")
 plt.title("Fake Images")
 plt.imshow(np.transpose(img_list[-1],(1,2,0)))
