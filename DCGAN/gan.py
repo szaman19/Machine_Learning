@@ -83,20 +83,20 @@ dataloader = torch.utils.data.DataLoader(dataset, batch_size=batch_size,
 device = torch.device("cuda:0" if (torch.cuda.is_available() and ngpu > 0) else "cpu")
 
 # # Plot some training images
-# real_batch = next(iter(dataloader))
-# plt.figure(figsize=(4,4))
-# plt.axis("off")
-# plt.title("Training Images")
+real_batch = next(iter(dataloader))
+plt.figure(figsize=(8,8))
+plt.axis("off")
+plt.title("Training Images (Grayscale)")
 
-# grid = vutils.make_grid(real_batch[0].to(device)[:32], padding=2, normalize=True).cpu()
+grid = vutils.make_grid(real_batch[0].to(device)[:32], padding=2, normalize=True).cpu()
 
-# print(grid.shape)
+print(grid.shape)
 
-# transpose = np.transpose(grid,(1,2,0))
+transpose = np.transpose(grid,(1,2,0))
 
-# print(transpose.shape)
-# plt.imshow(transpose)
-# plt.savefig("Original_images.png")
+print(transpose.shape)
+plt.imshow(transpose)
+plt.savefig("Original_images_BW.png")
 
 
 # custom weights initialization called on netG and netD
@@ -316,7 +316,7 @@ plt.figure(figsize=(4,4))
 # Plot the fake images from the last epoch
 # plt.subplot(1,2,2)
 plt.axis("off")
-plt.title("Fake Images")
+plt.title("Fake Images (Grayscale)")
 print(img_list[-1].shape)
 plt.imshow(np.transpose(img_list[-1],(1,2,0)))
-plt.savefig("Fake_Images.png")
+plt.savefig("Fake_Images_BW.png")
