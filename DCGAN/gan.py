@@ -263,7 +263,9 @@ for epoch in range(num_epochs):
         # Add the gradients from the all-real and all-fake batches
         errD = errD_real + errD_fake
         # Update D
-        optimizerD.step()
+
+        if(errD > 0.02):
+        	optimizerD.step()
 
         ############################
         # (2) Update G network: maximize log(D(G(z)))
