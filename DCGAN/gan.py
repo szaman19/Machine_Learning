@@ -28,14 +28,14 @@ torch.manual_seed(manualSeed)
 dataroot = "data/Romeria"
 
 # Number of workers for dataloader
-workers = 16
+workers = 2
 
 # Batch size during training
 batch_size = 16
 
 # Spatial size of training images. All images will be resized to this
 #   size using a transformer.
-image_size = 256
+image_size = 64
 
 # Number of channels in the training images. For color images this is 3
 nc = 3
@@ -56,11 +56,15 @@ num_epochs = 25
 lr = .0002
 
 # Beta1 hyperparam for Adam optimizers
-beta1 = 0.9
+beta1 = 0.5
 
 # Number of GPUs available. Use 0 for CPU mode.
 ngpu = 1
 
+
+# Number of images per slide 
+
+num_images = 32
 # We can use an image folder dataset the way we have it setup.
 # Create the dataset
 dataset = dset.ImageFolder(root=dataroot,
@@ -126,17 +130,9 @@ class Generator(nn.Module):
             nn.BatchNorm2d(ngf*4),
             nn.ReLU(True),
             # state size. (ngf * 4) x 32 x 32
-            nn.ConvTranspose2d( ngf * 4, ngf*2, 4, 2, 1, bias=False),
-            nn.BatchNorm2d(ngf*2),
-            nn.ReLU(True),
-            # state size. (ngf * 2) x 64 x 64
-            nn.ConvTranspose2d( ngf * 2, ngf, 4, 2, 1, bias=False),
-            nn.BatchNorm2d(ngf),
-            nn.ReLU(True),
-            # state size. (ngf ) x 128 x 128
-            nn.ConvTranspose2d( ngf, nc, 4, 2, 1, bias=False),
+            nn.ConvTranspose2d( ngf * 4, nc, 4, 2, 1, bias=False),          
             nn.Tanh()
-            # state size. (nc) x 256 x 256
+            # state size. (nc) x 64 x 64
         )
 
     def forward(self, input):
@@ -151,31 +147,23 @@ class Discriminator(nn.Module):
         super(Discriminator, self).__init__()
         self.ngpu = ngpu
         self.main = nn.Sequential(
-            # input is (nc) x 256 x 256
+            # input is (nc) x 64 x 64
             nn.Conv2d(nc, ndf, 4, 2, 1, bias=False),
             nn.LeakyReLU(0.2, inplace=True),
-            # state size. (ndf) x 128 x 128
+            # state size. (ndf) x 32 x 32
             nn.Conv2d(ndf, ndf * 2, 4, 2, 1, bias=False),
             nn.BatchNorm2d(ndf * 2),
             nn.LeakyReLU(0.2, inplace=True),
-            # state size. (ndf*2) x 64 x 64
+            # state size. (ndf*2) x 16 x 16
             nn.Conv2d(ndf * 2, ndf * 4, 4, 2, 1, bias=False),
             nn.BatchNorm2d(ndf * 4),
             nn.LeakyReLU(0.2, inplace=True),
-            # state size. (ndf*4) x 32 x 32
+            # state size. (ndf*4) x 8 x 8
             nn.Conv2d(ndf * 4, ndf * 8, 4, 2, 1, bias=False),
             nn.BatchNorm2d(ndf * 8),
-            nn.LeakyReLU(0.2, inplace=True),
-            # state size. (ndf *8) x 16 x 16
-            nn.Conv2d(ndf * 8, ndf * 16, 4, 2, 1, bias=False),
-            nn.BatchNorm2d(ndf * 16),
-            nn.LeakyReLU(0.2, inplace=True),
-            # state size. (ndf * 16) x 8 x 8
-            nn.Conv2d(ndf * 16, ndf * 32, 4, 2, 1, bias=False),
-            nn.BatchNorm2d(ndf * 32),
-            nn.LeakyReLU(0.2, inplace=True),
+            nn.LeakyReLU(0.2, inplace=True),           
             # state size. (ndf*32) x 4 x 4
-            nn.Conv2d(ndf * 32, 1, 4, 1, 0, bias=False),
+            nn.Conv2d(ndf * 8, 1, 4, 1, 0, bias=False),
             nn.Sigmoid()
         )
 
@@ -219,7 +207,7 @@ criterion = nn.BCELoss()
 
 # Create batch of latent vectors that we will use to visualize
 #  the progression of the generator
-fixed_noise = torch.randn(16, nz, 1, 1, device=device)
+fixed_noise = torch.randn(num_images, nz, 1, 1, device=device)
 
 # Establish convention for real and fake labels during training
 real_label = 1
@@ -318,7 +306,7 @@ for epoch in range(num_epochs):
 real_batch = next(iter(dataloader))
 
 # Plot the real images
-plt.figure(figsize=(8,8))
+plt.figure(figsize=(4,4))
 # plt.subplot(1,2,1)
 # plt.axis("off")
 # plt.title("Real Images")
@@ -330,4 +318,4 @@ plt.axis("off")
 plt.title("Fake Images")
 print(img_list[-1].shape)
 plt.imshow(np.transpose(img_list[-1],(1,2,0)))
-plt.savefig("Original_and_Fake_Images.png")
+plt.savefig("Fake_Images.png")
