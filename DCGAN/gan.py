@@ -50,7 +50,7 @@ ngf = 64
 ndf = 64
 
 # Number of training epochs
-num_epochs = 50
+num_epochs = 100
 
 # Learning rate for optimizers
 lr = 0.0002
@@ -311,5 +311,5 @@ plt.figure(figsize=(4,4))
 # plt.subplot(1,2,2)
 plt.axis("off")
 plt.title("Fake Images")
-plt.imshow(np.transpose(img_list[-1],(1,2,0)))
+plt.imshow(np.transpose(img_list[-1][:16],(1,2,0)))
 plt.savefig("Original_and_Fake_Images.png")
