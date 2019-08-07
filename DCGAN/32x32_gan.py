@@ -28,7 +28,7 @@ torch.manual_seed(manualSeed)
 dataroot = "data/Romeria"
 
 # Number of workers for dataloader
-workers = 10
+workers = 16
 
 # Batch size during training
 batch_size = 128
@@ -41,13 +41,13 @@ image_size = 32
 nc = 3
 
 # Size of z latent vector (i.e. size of generator input)
-nz = 1024
+nz = 128
 
 # Size of feature maps in generator
-ngf = 128
+ngf = 32
 
 # Size of feature maps in discriminator
-ndf = 64
+ndf = 32
 
 # Number of training epochs
 num_epochs = 125
