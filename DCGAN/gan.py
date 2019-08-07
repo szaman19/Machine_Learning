@@ -31,7 +31,7 @@ dataroot = "data/Romeria"
 workers = 10
 
 # Batch size during training
-batch_size = 128
+batch_size = 16
 
 # Spatial size of training images. All images will be resized to this
 #   size using a transformer.
