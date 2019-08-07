@@ -41,13 +41,13 @@ image_size = 64
 nc = 3
 
 # Size of z latent vector (i.e. size of generator input)
-nz = 200
+nz = 100
 
 # Size of feature maps in generator
-ngf = 64
+ngf = 16
 
 # Size of feature maps in discriminator
-ndf = 64
+ndf = 16
 
 # Number of training epochs
 num_epochs = 125
@@ -56,7 +56,7 @@ num_epochs = 125
 lr = 0.0002
 
 # Beta1 hyperparam for Adam optimizers
-beta1 = 0.5
+beta1 = 0.9
 
 # Number of GPUs available. Use 0 for CPU mode.
 ngpu = 1
@@ -143,23 +143,31 @@ class Discriminator(nn.Module):
         super(Discriminator, self).__init__()
         self.ngpu = ngpu
         self.main = nn.Sequential(
-            # input is (nc) x 64 x 64
+            # input is (nc) x 256 x 256
             nn.Conv2d(nc, ndf, 4, 2, 1, bias=False),
             nn.LeakyReLU(0.2, inplace=True),
-            # state size. (ndf) x 32 x 32
+            # state size. (ndf) x 128 x 128
             nn.Conv2d(ndf, ndf * 2, 4, 2, 1, bias=False),
             nn.BatchNorm2d(ndf * 2),
             nn.LeakyReLU(0.2, inplace=True),
-            # state size. (ndf*2) x 16 x 16
+            # state size. (ndf*2) x 64 x 64
             nn.Conv2d(ndf * 2, ndf * 4, 4, 2, 1, bias=False),
             nn.BatchNorm2d(ndf * 4),
             nn.LeakyReLU(0.2, inplace=True),
-            # state size. (ndf*4) x 8 x 8
+            # state size. (ndf*4) x 32 x 32
             nn.Conv2d(ndf * 4, ndf * 8, 4, 2, 1, bias=False),
             nn.BatchNorm2d(ndf * 8),
             nn.LeakyReLU(0.2, inplace=True),
-            # state size. (ndf*8) x 4 x 4
-            nn.Conv2d(ndf * 8, 1, 4, 1, 0, bias=False),
+            # state size. (ndf *8) x 16 x 16
+            nn.Conv2d(ndf * 8, ndf * 16, 4, 2, 1, bias=False),
+            nn.BatchNorm2d(ndf * 16),
+            nn.LeakyReLU(0.2, inplace=True),
+            # state size. (ndf * 16) x 8 x 8
+            nn.Conv2d(ndf * 16, ndf * 32, 4, 2, 1, bias=False),
+            nn.BatchNorm2d(ndf * 32),
+            nn.LeakyReLU(0.2, inplace=True),
+            # state size. (ndf*32) x 4 x 4
+            nn.Conv2d(ndf * 32, 1, 4, 1, 0, bias=False),
             nn.Sigmoid()
         )
 
@@ -264,7 +272,7 @@ for epoch in range(num_epochs):
         errD = errD_real + errD_fake
         # Update D
 
-        if(errD > 0.02):
+        if(errD > 0.1):
         	optimizerD.step()
 
         ############################
