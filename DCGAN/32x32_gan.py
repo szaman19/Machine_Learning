@@ -44,16 +44,16 @@ nc = 3
 nz = 128
 
 # Size of feature maps in generator
-ngf = 32
+ngf = 64
 
 # Size of feature maps in discriminator
-ndf = 32
+ndf = 64
 
 # Number of training epochs
 num_epochs = 125
 
 # Learning rate for optimizers
-lr = 1e-5
+lr = .0002
 
 # Beta1 hyperparam for Adam optimizers
 beta1 = 0.9
@@ -195,7 +195,7 @@ criterion = nn.BCELoss()
 
 # Create batch of latent vectors that we will use to visualize
 #  the progression of the generator
-fixed_noise = torch.randn(16, nz, 1, 1, device=device)
+fixed_noise = torch.randn(32, nz, 1, 1, device=device)
 
 # Establish convention for real and fake labels during training
 real_label = 1
@@ -306,4 +306,4 @@ plt.axis("off")
 plt.title("Fake Images")
 print(img_list[-1].shape)
 plt.imshow(np.transpose(img_list[-1],(1,2,0)))
-plt.savefig("Original_and_Fake_Images.png")
+plt.savefig("Fake_Images.png")
