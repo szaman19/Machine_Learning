@@ -41,7 +41,7 @@ image_size = 64
 nc = 3
 
 # Size of z latent vector (i.e. size of generator input)
-nz = 100
+nz = 200
 
 # Size of feature maps in generator
 ngf = 64
@@ -50,7 +50,7 @@ ngf = 64
 ndf = 64
 
 # Number of training epochs
-num_epochs = 500
+num_epochs = 125
 
 # Learning rate for optimizers
 lr = 0.0002
@@ -203,7 +203,7 @@ criterion = nn.BCELoss()
 
 # Create batch of latent vectors that we will use to visualize
 #  the progression of the generator
-fixed_noise = torch.randn(64, nz, 1, 1, device=device)
+fixed_noise = torch.randn(16, nz, 1, 1, device=device)
 
 # Establish convention for real and fake labels during training
 real_label = 1
@@ -301,7 +301,7 @@ for epoch in range(num_epochs):
 real_batch = next(iter(dataloader))
 
 # Plot the real images
-plt.figure(figsize=(4,4))
+plt.figure(figsize=(8,8))
 # plt.subplot(1,2,1)
 # plt.axis("off")
 # plt.title("Real Images")
